@@ -100,7 +100,7 @@ void dijkstra(int src)
 {
     vector<int> d(node_no, INF);   // Min cost to reach a node
     vector<int> pre(node_no, nul); // Predecessor node
-    vector<bool> visited(node_no, false); // Mark visited nodes
+   // vector<bool> visited(node_no, false); // Mark visited nodes
 
     d[src] = 0;
 
@@ -112,8 +112,8 @@ void dijkstra(int src)
         int u = Q.top().second;
         Q.pop();
 
-        if (visited[u]) continue;  // Skip already visited nodes
-        visited[u] = true;
+        //if (visited[u]) continue;  // Skip already visited nodes
+        //visited[u] = true;
 
         for (int v : adj[u])
         {

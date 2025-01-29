@@ -39,6 +39,16 @@ normal input....
 1 3 2
 3 4 1
 1 4 3
+
+
+negative weight cycle
+4 5
+1 2 3
+2 3 2
+3 4 -5
+4 2 -4
+1 4 6
+
  */
 
 #define para cout<<endl
@@ -86,45 +96,41 @@ void printMatrixEn(vector<vector<int>>&e)
 
 
 
-void dijkstra(int scr)
+void dijkstra(int src)
 {
-    // Initializes Single Source
-    vector<int> d(node_no, INF);   // d[i] is min cost to reach node
-    vector<int> pre(node_no, nul); // pre[i] is immediate predecessor node to reach node i
-    d[scr] = 0;
+    vector<int> d(node_no, INF);   // Min cost to reach a node
+    vector<int> pre(node_no, nul); // Predecessor node
+    vector<bool> visited(node_no, false); // Mark visited nodes
 
-    set<int> S;                       // Set for checking visited nodes
-    priority_queue<pair<int, int>> Q; // Takes a priority Queue which takes in pair of (cost to reach node i) and (i)
-    // This will help to sort and find the lightest edge from the currently exploring node
-    Q.push({0, scr}); // Pushes the (min cost to reach source, source) since the first step starts from source
+    d[src] = 0;
 
-    while (!Q.empty()) // Q will be empty once all the nodes have been explored
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> Q;
+    Q.push({0, src});  // Push (distance, node)
+
+    while (!Q.empty())
     {
-        int u = Q.top().second; // The second element of the pair is the node to be explored
+        int u = Q.top().second;
         Q.pop();
 
-        if (S.find(u) != S.end()) // If node has been visited it will skip
-        {
-            continue;
-        }
-        S.insert(u); // Else, insert the node in the visited set
+        if (visited[u]) continue;  // Skip already visited nodes
+        visited[u] = true;
 
-        // Relax
-        for (int v : adj[u])              // For all adjacent nodes of u
+        for (int v : adj[u])
         {
-            // v is the adjacent node of u which updates every iteration
-            if (d[v] > (d[u] + Gm[u][v])) // If the cost of using source and present node is lower than the previous min cost then it will be updated
+            int weight = Gm[u][v];
+            if (d[u] + weight < d[v])
             {
-                d[v] = (d[u] + Gm[u][v]);
-                pre[v] = u;                  // Updates the predecessor to be the currently exploring node
-                Q.push({-d[v], v}); // Pushes the negative value of the edge with the adjacent node to explore the adjacent node with the lowest value next iteration
-                // Negative Value is pushed as priority Queue uses max heap instead of min heap
+                d[v] = d[u] + weight;
+                pre[v] = u;
+                Q.push({d[v], v}); // Push updated distance and node
             }
         }
     }
-    Gm[scr] = d;   // Updates the source's W' to the new distance
-    pi[scr] = pre; // Updates the source's Predecessor Matrix
+
+    Gm[src] = d;   // Save shortest path costs for src
+    pi[src] = pre; // Save predecessors for src
 }
+
 
 
 
@@ -280,7 +286,7 @@ void Jonson()
 para;
     cout << "Johnson completed cost: ";
     printMatrix(G);  // Prints the finally obtained Cost Matrix
-    cout << "Johnson completed pi: ";
+    cout << "pi: ";
     printMatrix(pi); // Prints the finally obtained Predecessor Matrix
 
 

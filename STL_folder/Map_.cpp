@@ -42,7 +42,7 @@ int main()
  ///m.find() function will return a pointer of the key value
 
 
-    m.erase(3); // it will take iterator or key value
+    //m.erase(3); // it will take iterator or key value
     auto it = m.find(3);
     cout<<"Finding the value with the find function: "<<endl;
     if(it==m.end()){
@@ -52,6 +52,6 @@ int main()
     {
         cout<<it->first<<" "<<it->second<<endl;
     }
-
+    //m.clear() for clear
 
 }
